@@ -13,10 +13,10 @@
 
 <br><br>
 
-ชาย <input type="number" id="all male"><br>
-หญิง <input type="number" id="all female"><br>
-ชายมาวันนี้ <input type="number" id="male today"><br>
-หญิงมาวันนี้ <input type="number" id="female today"><br>
+ชาย <input type="number" id="allmale"><br>
+หญิง <input type="number" id="allfemale"><br>
+ชายมาวันนี้ <input type="number" id="maletoday"><br>
+หญิงมาวันนี้ <input type="number" id="femaletoday"><br>
 ป่วย <input type="number" id="sick"><br>
 ลา <input type="number" id="leave"><br>
 ขาด <input type="number" id="absent"><br>
@@ -45,31 +45,59 @@ async function loadClassrooms(){
 
 async function submitData(){
 
-  const male = Number(document.getElementById("male").value);
-  const female = Number(document.getElementById("female").value);
+const allMale =
+Number(document.getElementById("allMale").value);
 
-  const data = {
+const allFemale =
+Number(document.getElementById("allFemale").value);
 
-    date:new Date().toLocaleDateString(),
-    classroom:document.getElementById("classroom").value,
-    male:male,
-    female:female,
-    total:male+female,
-    sick:Number(document.getElementById("sick").value),
-    leave:Number(document.getElementById("leave").value),
-    absent:Number(document.getElementById("absent").value),
-    present:(male+female) - (Number(sick)+Number(leave)+Number(absent)),
-    timestamp:new Date(),
-    source:"web"
+const maleToday =
+Number(document.getElementById("maleToday").value);
 
-  };
+const femaleToday =
+Number(document.getElementById("femaleToday").value);
 
-  await fetch(api,{
-    method:"POST",
-    body:JSON.stringify(data)
-  });
+const sick =
+Number(document.getElementById("sick").value);
 
-  alert("บันทึกเรียบร้อยแล้ว");
+const leave =
+Number(document.getElementById("leave").value);
+
+const absent =
+Number(document.getElementById("absent").value);
+
+const data = {
+
+date:new Date().toLocaleDateString(),
+
+classroom:
+document.getElementById("classroom").value,
+
+allMale:allMale,
+allFemale:allFemale,
+
+maleToday:maleToday,
+femaleToday:femaleToday,
+
+present:maleToday+femaleToday,
+
+sick:sick,
+leave:leave,
+absent:absent,
+
+timestamp:new Date(),
+
+source:"web"
+
+};
+
+await fetch(api,{
+method:"POST",
+body:JSON.stringify(data)
+});
+
+alert("บันทึกเรียบร้อยแล้ว");
+
 }
 
 loadClassrooms();
