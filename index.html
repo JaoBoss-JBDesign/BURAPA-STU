@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Student Attendance</title>
+</head>
+
+<body>
+
+<h2>บันทึกสถิติการมาเรียน</h2>
+
+<select id="classroom"></select>
+
+<br><br>
+
+ชาย <input type="number" id="male"><br>
+หญิง <input type="number" id="female"><br>
+ป่วย <input type="number" id="sick"><br>
+ลา <input type="number" id="leave"><br>
+ขาด <input type="number" id="absent"><br>
+
+<br><br>
+
+<button onclick="submitData()">บันทึก</button>
+
+<script>
+
+const api = "PASTE_API_URL_HERE";
+
+async function loadClassrooms(){
+  const res = await fetch(api+"?mode=getClassrooms");
+  const data = await res.json();
+
+  const select = document.getElementById("classroom");
+
+  data.forEach(c=>{
+    let option = document.createElement("option");
+    option.value = c;
+    option.textContent = c;
+    select.appendChild(option);
+  });
+}
+
+async function submitData(){
+
+  const male = Number(document.getElementById("male").value);
+  const female = Number(document.getElementById("female").value);
+
+  const data = {
+
+    date:new Date().toLocaleDateString(),
+    classroom:document.getElementById("classroom").value,
+    male:male,
+    female:female,
+    total:male+female,
+    sick:Number(document.getElementById("sick").value),
+    leave:Number(document.getElementById("leave").value),
+    absent:Number(document.getElementById("absent").value),
+    present:(male+female) - (Number(sick)+Number(leave)+Number(absent)),
+    timestamp:new Date(),
+    source:"web"
+
+  };
+
+  await fetch(api,{
+    method:"POST",
+    body:JSON.stringify(data)
+  });
+
+  alert("บันทึกสำเร็จ");
+}
+
+loadClassrooms();
+
+</script>
+
+</body>
+</html>
