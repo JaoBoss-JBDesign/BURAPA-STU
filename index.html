@@ -7,16 +7,18 @@
 
 <body>
 
-<h2>ระบบบันทึกสถิติการมาเรียนของนักเรียน โรงเรียนเทศบาลบูรพาอุบล</h2>
+<h2>บันทึกสถิติการมาเรียนของนักเรียน</h2>
 
-<select id="classroom"></select>
+<select id="classrooms"></select>
 
 <br><br>
 
-ชาย <input type="number" id="allmale"><br>
-หญิง <input type="number" id="allfemale"><br>
-ชายมาวันนี้ <input type="number" id="maletoday"><br>
-หญิงมาวันนี้ <input type="number" id="femaletoday"><br>
+ชายทั้งหมด <input type="number" id="all_boys">
+หญิงทั้งหมด <input type="number" id="all_girls">
+
+ชายมาวันนี้ <input type="number" id="boys_today">
+หญิงมาวันนี้ <input type="number" id="girls_today">
+
 ป่วย <input type="number" id="sick"><br>
 ลา <input type="number" id="leave"><br>
 ขาด <input type="number" id="absent"><br>
@@ -30,32 +32,40 @@
 const api = "https://script.google.com/macros/s/AKfycbxDfNIpPlZpremzXO3j_kxBijxxWn46KZdim27gZLuCKzgjOonYVRNLB7PfKaoYlj2LMg/exec";
 
 async function loadClassrooms(){
-  const res = await fetch(api+"?mode=getClassrooms");
-  const data = await res.json();
 
-  const select = document.getElementById("classroom");
+const res = await fetch(api+"?mode=getClassrooms");
+const data = await res.json();
 
-  data.forEach(c=>{
-    let option = document.createElement("option");
-    option.value = c;
-    option.textContent = c;
-    select.appendChild(option);
-  });
+const select = document.getElementById("classrooms");
+
+select.innerHTML="";
+
+data.forEach(c=>{
+
+let option = document.createElement("option");
+
+option.value = c;
+option.textContent = c;
+
+select.appendChild(option);
+
+});
+
 }
-
+  
 async function submitData(){
 
-const allMale =
-Number(document.getElementById("allMale").value);
+const allboys =
+Number(document.getElementById("all_boys").value);
 
-const allFemale =
-Number(document.getElementById("allFemale").value);
+const allgirls =
+Number(document.getElementById("all_girls").value);
 
-const maleToday =
-Number(document.getElementById("maleToday").value);
+const boystoday =
+Number(document.getElementById("boys_today").value);
 
-const femaleToday =
-Number(document.getElementById("femaleToday").value);
+const girlstoday =
+Number(document.getElementById("girls_today").value);
 
 const sick =
 Number(document.getElementById("sick").value);
@@ -66,27 +76,29 @@ Number(document.getElementById("leave").value);
 const absent =
 Number(document.getElementById("absent").value);
 
+if(!allboys || !allgirls){
+alert("กรุณากรอกจำนวนนักเรียนทั้งหมด");
+return;
+}
+
 const data = {
 
 date:new Date().toLocaleDateString(),
 
 classroom:
-document.getElementById("classroom").value,
+document.getElementById("classrooms").value,
 
-allMale:allMale,
-allFemale:allFemale,
+all_boys:allboys,
+all_girls:allgirls,
 
-maleToday:maleToday,
-femaleToday:femaleToday,
-
-present:maleToday+femaleToday,
+boys_today:boystoday,
+girls_today:girlstoday,
 
 sick:sick,
 leave:leave,
 absent:absent,
 
 timestamp:new Date(),
-
 source:"web"
 
 };
